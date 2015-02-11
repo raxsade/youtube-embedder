@@ -1,0 +1,307 @@
+<html>
+<head>
+<title>YouTube Embedded Player HTML Code Compiler BETA</title>
+<script language="javascript" type="text/javascript">
+
+
+function getCheckedValue(radioObj) {
+	if(!radioObj)
+		return "";
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return radioObj.value;
+		else
+			return "";
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return radioObj[i].value;
+		}
+	}
+	return "";
+}
+
+
+function change() {
+	var lang='hl='+document.myform.lang.value;
+
+	var str=document.myform.video_link.value;
+	var contentType = getCheckedValue(document.myform.contentType);
+	if(contentType == 'video') {
+		if(str.indexOf("\&v=") > '-1') {var n=str.indexOf("\&v=")+3;}
+		else if(str.indexOf("\?v=") > '-1') {var n=str.indexOf("\?v=")+3;}
+		else if(str.indexOf(".be\/") > '-1') {var n=str.indexOf(".be\/")+4;}
+		if(str.indexOf("\&",n+1) > '-1') {var m=str.indexOf("\&",n+1)}else{var m=str.length;}
+		var video_id=str.substring(n, m);
+		var list='';
+		var listType = '';
+	} else if(contentType == 'playlist') {
+		if(str.indexOf("\&v=") > '-1') {var s=str.indexOf("\&v=")+3;}
+		else if(str.indexOf("\?v=") > '-1') {var s=str.indexOf("\?v=")+3;}
+		else if(str.indexOf(".be\/") > '-1') {var s=str.indexOf(".be\/")+4;}
+		if(str.indexOf("\&",s+1) > '-1') {var e=str.indexOf("\&",n+1)}else {var e=str.length;}
+		var video_id=str.substring(s, e);
+		if(str.indexOf("list=") > '-1') {var n=str.indexOf("list=")+5;}
+		if(str.indexOf("\&",n+1) > '-1'){var m=str.indexOf("\&",n+1)}else{var m=str.length;}
+		var list='&list='+str.substring(n, m);
+		var listType = '&listType='+contentType;
+	} else {}
+
+	var width = document.myform.width.value;
+	var height = document.myform.height.value;
+
+	var autohide_value = getCheckedValue(document.myform.autohide);
+	if(autohide_value == '2'){var autohide='';}else{var autohide='&autohide='+autohide_value;}
+
+	if(document.myform.autoplay.checked){var autoplay='&autoplay=1';}else{var autoplay='';}
+
+	if(document.myform.cc_load_policy.checked){var cc_load_policy='&cc_load_policy=1';}else{var cc_load_policy='';}
+
+	var color_value=getCheckedValue(document.myform.color);
+	if(color_value == 'red'){var color='';}else{var color='&color='+color_value;}
+
+	if(document.myform.controls.checked){var controls='';}else{var controls='&controls=0';}
+
+	if(document.myform.disablekb.checked){var disablekb='';}else{var disablekb='&disablekb=1';}
+
+	if(document.myform.fs.checked){var fs='';}else{var fs='&fs=0';}
+
+	if(document.myform.iv_load_policy.checked){var iv_load_policy='';}else{var iv_load_policy='&iv_load_policy=3';}
+
+	if(document.myform.loop.checked){var loop='&loop=1'; if(contentType == 'video'){list='&playlist='+video_id;}else{}}else{var loop='';}
+
+	if(document.myform.modestbranding.checked){var modestbranding='&modestbranding=1';}else{var modestbranding='';}
+
+	if(document.myform.rel.checked){var rel='';}else{var rel='&rel=0';}
+
+	if(document.myform.showinfo.checked){var showinfo='';}else{var showinfo='&showinfo=0';}
+
+	var start_value = document.myform.start.value;
+	if(start_value == ''){var start='';}else{var start='&start='+start_value;}
+
+	var end_value = document.myform.end.value;
+	if(end_value == ''){var end='';}else{var end='&end='+end_value;}
+
+
+	var theme_value = getCheckedValue(document.myform.theme);
+	if(theme_value == 'dark'){var theme='';}else{var theme='&theme='+theme_value;}
+
+	var youtubelink = 'http://www.youtube.com/v/'+video_id+'?version=3&amp;'+lang+autohide+autoplay+cc_load_policy+color+controls+disablekb+start+end+fs+iv_load_policy+listType+list+loop+modestbranding+rel+showinfo+theme;
+	
+	var contents = '<object width="'+width+'" height="'+height+'"><param name="movie" value="'+youtubelink+'"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="'+youtubelink+'" type="application/x-shockwave-flash" width="853" height="480" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
+
+	document.myform.outputtext.value = contents;
+
+	if(document.myform.autopreview.checked){document.getElementById('preview').innerHTML = contents;}else{}
+}
+
+function clear() {document.myform.list.value='';}
+</script>
+</head>
+<body  style="background-color:#F0F0F0;color:black;text-align:justify;font-family:Arial,Verdana;font-size:10px;">
+<table width=100%><tr>
+<form name="myform">
+<td width=50%>
+<b>Content Type.</b> This parameter specifies which kind of content will load in the player.<br>
+<input type="radio" name="contentType" value="video" checked onChange="change();"> <b>One video.</b> Enter the link for the video you want to play.<br>
+<input type="radio" name="contentType" value="playlist" onChange="change();"> <b>Playlist.</b> Open the first video of the playlist you want to play, copy its address and enter it here.<br>
+<b>Link:</b> <input type="text" name="video_link" size="50" onkeyup="change();"><br><br>
+
+<b>Width:</b> <input type="text" name="width" size="4" value="640" onkeyup="change();">
+<b>Height:</b> <input type="text" name="height" size="4" value="360" onkeyup="change();"><br>
+<b>Language.</b>
+<select id="lang" onchange="change()">
+  <option value="af">Afrikaans</option>
+  <option value="ak">Akan</option>
+  <option value="sq">Albanian</option>
+  <option value="am">Amharic</option>
+  <option value="ar">Arabic</option>
+  <option value="hy">Armenian</option>
+  <option value="az">Azerbaijani</option>
+  <option value="eu">Basque</option>
+  <option value="be">Belarusian</option>
+  <option value="bem">Bemba</option>
+  <option value="bn">Bengali</option>
+  <option value="bh">Bihari</option>
+  <option value="xx-bork">Bork, bork, bork!</option>
+  <option value="bs">Bosnian</option>
+  <option value="br">Breton</option>
+  <option value="bg">Bulgarian</option>
+  <option value="km">Cambodian</option>
+  <option value="ca">Catalan</option>
+  <option value="chr">Cherokee</option>
+  <option value="ny">Chichewa</option>
+  <option value="zh-CN">Chinese (Simplified)</option>
+  <option value="zh-TW">Chinese (Traditional)</option>
+  <option value="co">Corsican</option>
+  <option value="hr">Croatian</option>
+  <option value="cs">Czech</option>
+  <option value="da">Danish</option>
+  <option value="nl">Dutch</option>
+  <option value="xx-elmer">Elmer Fudd</option>
+  <option value="en" selected>English</option>
+  <option value="eo">Esperanto</option>
+  <option value="et">Estonian</option>
+  <option value="ee">Ewe</option>
+  <option value="fo">Faroese</option>
+  <option value="tl">Filipino</option>
+  <option value="fi">Finnish</option>
+  <option value="fr">French</option>
+  <option value="fy">Frisian</option>
+  <option value="gaa">Ga</option>
+  <option value="gl">Galician</option>
+  <option value="ka">Georgian</option>
+  <option value="de">German</option>
+  <option value="el">Greek</option>
+  <option value="gn">Guarani</option>
+  <option value="gu">Gujarati</option>
+  <option value="xx-hacker">Hacker</option>
+  <option value="ht">Haitian Creole</option>
+  <option value="ha">Hausa</option>
+  <option value="haw">Hawaiian</option>
+  <option value="iw">Hebrew</option>
+  <option value="hi">Hindi</option>
+  <option value="hu">Hungarian</option>
+  <option value="is">Icelandic</option>
+  <option value="ig">Igbo</option>
+  <option value="id">Indonesian</option>
+  <option value="ia">Interlingua</option>
+  <option value="ga">Irish</option>
+  <option value="it">Italian</option>
+  <option value="ja">Japanese</option>
+  <option value="jw">Javanese</option>
+  <option value="kn">Kannada</option>
+  <option value="kk">Kazakh</option>
+  <option value="rw">Kinyarwanda</option>
+  <option value="rn">Kirundi</option>
+  <option value="xx-klingon">Klingon</option>
+  <option value="kg">Kongo</option>
+  <option value="ko">Korean</option>
+  <option value="kri">Krio (Sierra Leone)</option>
+  <option value="ku">Kurdish</option>
+  <option value="ckb">Kurdish (Soranî)</option>
+  <option value="ky">Kyrgyz</option>
+  <option value="lo">Laothian</option>
+  <option value="la">Latin</option>
+  <option value="lv">Latvian</option>
+  <option value="ln">Lingala</option>
+  <option value="lt">Lithuanian</option>
+  <option value="loz">Lozi</option>
+  <option value="lg">Luganda</option>
+  <option value="ach">Luo</option>
+  <option value="mk">Macedonian</option>
+  <option value="mg">Malagasy</option>
+  <option value="ms">Malay</option>
+  <option value="ml">Malayalam</option>
+  <option value="mt">Maltese</option>
+  <option value="mi">Maori</option>
+  <option value="mr">Marathi</option>
+  <option value="mfe">Mauritian Creole</option>
+  <option value="mo">Moldavian</option>
+  <option value="mn">Mongolian</option>
+  <option value="sr-ME">Montenegrin</option>
+  <option value="ne">Nepali</option>
+  <option value="pcm">Nigerian Pidgin</option>
+  <option value="nso ">Northern Sotho</option>
+  <option value="no">Norwegian</option>
+  <option value="nn">Norwegian (Nynorsk)</option>
+  <option value="oc">Occitan</option>
+  <option value="or">Oriya</option>
+  <option value="om">Oromo</option>
+  <option value="ps">Pashto</option>
+  <option value="fa">Persian</option>
+  <option value="xx-pirate">Pirate</option>
+  <option value="pl">Polish</option>
+  <option value="pt-BR">Portuguese (Brazil)</option>
+  <option value="pt-PT">Portuguese (Portugal)</option>
+  <option value="pa">Punjabi</option>
+  <option value="qu">Quechua</option>
+  <option value="ro">Romanian</option>
+  <option value="rm">Romansh</option>
+  <option value="nyn">Runyakitara</option>
+  <option value="ru">Russian</option>
+  <option value="gd">Scots Gaelic</option>
+  <option value="sr">Serbian</option>
+  <option value="sh">Serbo-Croatian</option>
+  <option value="st">Sesotho</option>
+  <option value="tn">Setswana</option>
+  <option value="crs">Seychellois Creole</option>
+  <option value="sn">Shona</option>
+  <option value="sd">Sindhi</option>
+  <option value="si">Sinhalese</option>
+  <option value="sk">Slovak</option>
+  <option value="sl">Slovenian</option>
+  <option value="so">Somali</option>
+  <option value="es">Spanish</option>
+  <option value="es-419">Spanish (Latin American)</option>
+  <option value="su">Sundanese</option>
+  <option value="sw">Swahili</option>
+  <option value="sv">Swedish</option>
+  <option value="tg">Tajik</option>
+  <option value="ta">Tamil</option>
+  <option value="tt">Tatar</option>
+  <option value="te">Telugu</option>
+  <option value="th">Thai</option>
+  <option value="ti">Tigrinya</option>
+  <option value="to">Tonga</option>
+  <option value="lua">Tshiluba</option>
+  <option value="tum">Tumbuka</option>
+  <option value="tr">Turkish</option>
+  <option value="tk">Turkmen</option>
+  <option value="tw">Twi</option>
+  <option value="ug">Uighur</option>
+  <option value="uk">Ukrainian</option>
+  <option value="ur">Urdu</option>
+  <option value="uz">Uzbek</option>
+  <option value="vi">Vietnamese</option>
+  <option value="cy">Welsh</option>
+  <option value="wo">Wolof</option>
+  <option value="xh">Xhosa</option>
+  <option value="yi">Yiddish</option>
+  <option value="yo">Yoruba</option>
+  <option value="zu">Zulu</option>
+</select><br>
+
+<input type="checkbox" id="cc_load_policy" onchange="change()"> <b>Force Subtitles to display.</b> If not forced, subtitle display will be based on user preference.<br>
+
+<input type="checkbox" id="autoplay" onchange="change()"> <b>Autoplay.</b> Sets whether or not the initial video will autoplay when the player loads.<br>
+
+<input type="checkbox" id="loop" onchange="change()"> <b>Loop.</b> In the case of a single video, the player will play the initial video again and again. In the case of a playlist, the player will play the entire playlist and then start again at the first video.<br>
+
+<input type="checkbox" id="controls" onchange="change()" checked> <b>Display Video Player Controls.</b> If not displayed, the player will look like the chromeless player.<br>
+
+<input type="checkbox" id="disablekb" onchange="change()" checked> <b>Enable Player Keyboard Controls.</b> Keyboard controls are: Spacebar: Play/Pause. Left/Right Arrows: Jump back/ahead 10% in the current video. Up/Down Arrows: Volume up/down.<br>
+
+<input type="checkbox" id="fs" onchange="change()" checked> <b>Display Fullscreen Button.</b> Sets whether to display the fullscreen button.<br>
+
+<input type="checkbox" id="iv_load_policy" onchange="change()" checked> <b>Show Video Annotations.</b><br>
+
+<input type="checkbox" id="rel" onchange="change()" checked> <b>Show Related Videos.</b> This parameter indicates whether the player should show related videos when playback of the initial video ends.<br>
+
+<input type="checkbox" id="showinfo" onchange="change()" checked> <b>Show Info.</b> Sets whether the player will display information like the video title and uploader before the video starts playing. If the player is loading a playlist, then, upon loading, the player will also display thumbnail images for the videos in the playlist.<br>
+
+<input type="checkbox" id="modestbranding" onchange="change()"> <b>Modest Branding.</b> This parameter lets you use a YouTube player that does not show a YouTube logo. It prevents the YouTube logo from displaying in the control bar. Note that a small YouTube text label will still display in the upper-right corner of a paused video when the user's mouse pointer hovers over the player.<br><br>
+
+<b>Theme.</b> This parameter indicates whether the embedded player will display player controls (like a 'play' button or volume control) within a dark or light control bar.<br>
+<input type="radio" name="theme" value="dark" checked onChange="change();"> Dark. <input type="radio" name="theme" value="light" onChange="change();"> Light.<br>
+<b>Video Progress Bar Color.</b> This parameter specifies the color that will be used in the player's video progress bar to highlight the amount of the video that the viewer has already seen.<br>
+<input type="radio" name="color" value="red" checked onChange="change();"> Red. <input type="radio" name="color" value="white" onChange="change();"> White (this option will disable the Modest Branding option).<br><br>
+
+<b>Autohide.</b> This parameter indicates whether the video controls will automatically hide after a video begins playing.<br>
+<input type="radio" name="autohide" value="2" checked onChange="change();"> The video progress bar will fade out while the player controls (play button, volume control, etc.) remain visible.<br>
+<input type="radio" name="autohide" value="1" onChange="change();"> The video progress bar and the player controls will slide out of view a couple of seconds after the video starts playing. They will only reappear if the user moves the mouse over the video player or presses a key on her keyboard.<br>
+<input type="radio" name="autohide" value="0" onChange="change();"> The video progress bar and the video player controls will be visible throughout the video and in fullscreen.<br><br>
+
+<b>Start Time:</b> <input type="text" name="start" size="4" onkeyup="change();"> This parameter causes the player to begin playing the video at the given number of seconds from the start of the video. Note that the player will look for the closest keyframe to the time you specify. This means sometimes the play head may seek to just before the requested time, usually no more than ~2 seconds. Delete to disable.<br>
+<b>End Time:</b> <input type="text" name="end" size="4" onkeyup="change();"> This parameter specifies the time, measured in seconds from the start of the video, when the player should stop playing the video. Note that the time is measured from the beginning of the video and not from the value of the Start Time parameter. Delete to disable.<br><br>
+
+
+
+</td><td valign="top">
+<b>HTML Code.</b> To get the video/playlist embedded to your webpage, you need to copy this code and paste it somewhere below the &lt;body&gt; tag of your webpage source code (wherever you want it to be).<br>
+<textarea name="outputtext" rows="10" cols="80"></textarea><br>
+<input type="checkbox" id="autopreview" onchange="change()"><b>Autopreview.</b><br>
+<p id="preview"></p>
+</td>
+</form>
+</tr></table></body></html>
